@@ -1,0 +1,60 @@
+&constants
+/
+
+&model
+    model_type = 'EVOL'  ! Obtain stellar structure from an evolutionary model
+    file = 'spb.mesa' !change here   ! File name of the evolutionary model
+    file_format = 'FGONG' ! File format of the evolutionary model
+/
+
+&mode
+    l = 0                ! Harmonic degree
+    tag = 'radial'
+/
+
+&osc
+    !outer_bound = 'VACUUM' ! Use a zero-pressure outer mechanical boundary condition
+    outer_bound = 'JCD' ! 
+    variables_set = 'JCD'
+/
+
+&rot
+/
+
+&num
+    !diff_scheme = 'COLLOC_GL2' ! default, danger!! ! 2th-order Gauss-Legendre collocation
+    !diff_scheme = 'COLLOC_GL4' ! 4th-order Gauss-Legendre collocation
+    !diff_scheme = 'COLLOC_GL6' ! 6th-order Gauss-Legendre collocation
+    !diff_scheme = 'MAGNUS_GL2' ! 2th-order Gauss-Legendre Magnus
+    !diff_scheme = 'MAGNUS_GL4' ! 4th-order Gauss-Legendre Magnus
+    diff_scheme = 'MAGNUS_GL6' ! 6th-order Gauss-Legendre Magnus
+/
+
+&scan
+    grid_type = 'LINEAR' ! Scan for modes using a uniform-in-period grid; best for g modes
+    freq_min_radial = 100        !change here ! Minimum frequency to scan from
+    freq_max_radial = 1800        !change here ! Maximum frequency to scan to
+    n_freq = 1500          ! Number of frequency points in scan
+    freq_min_units = 'UHZ'
+    freq_max_units = 'UHZ'
+    tag_list = 'radial'
+/
+
+
+&grid
+  w_osc = 10 ! Oscillatory region weight parameter
+  w_exp = 2  ! Exponential region weight parameter
+  w_ctr = 10 ! Central region weight parameter
+/
+
+
+&ad_output
+    summary_file = 'summary.txt' !change here                          ! File name for summary file
+    summary_file_format = 'TXT'                             ! Format of summary file
+    freq_units = 'UHZ'
+    summary_item_list = 'l,n_p,n_g,n_pg,freq,E_norm' ! Items to appear in summary file !j,E,E_p,E_g,M_star,R_star
+/
+
+&nad_output
+/
+

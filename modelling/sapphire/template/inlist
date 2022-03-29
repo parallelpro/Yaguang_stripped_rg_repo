@@ -1,0 +1,190 @@
+
+&star_job
+
+   !# output
+
+      pgstar_flag = .false.
+      save_model_when_terminate = .true.
+	save_model_filename = 'index000014final.mod' !set by driver.py 
+      save_photo_when_terminate = .false.
+      show_log_description_at_start = .false.
+      history_columns_file = 'history_columns.list'
+      profile_columns_file = 'profile_columns.list'
+
+   !# starting model
+
+      load_saved_model = .true.
+      saved_model_name = 'start.mod' !change this
+
+      !load_saved_model = .false.
+      !create_pre_main_sequence_model = .true.
+      !!pre_ms_T_c = 9e5!7e5
+
+   !# modifications to model
+
+      set_uniform_initial_composition = .false.
+      initial_zfracs = 6 ! GS98_zfracs = 3,  AGSS09_zfracs = 6
+      
+      set_initial_model_number = .true.
+      initial_model_number = 0
+
+   !# nuclear reactions
+
+        !### set_rates_preference
+        !### new_rates_preference
+
+         ! + 1 = NACRE rates
+         ! + 2 = jina reaclib rates
+
+      set_rates_preference = .true.
+      new_rates_preference = 2
+
+    !# misc 
+    num_steps_for_garbage_collection = 0 !for artemis cluster
+    
+/ ! end of star_job namelist
+
+
+&eos
+
+/ ! end of eos namelist
+
+
+&kap
+
+	Zbase =0.0142477  !set by driver.py
+      kap_file_prefix = 'a09' !'gs98' ! !change this
+      kap_lowT_prefix = 'lowT_fa05_a09p' ! 'lowT_fa05_gs98' ! !change this
+      kap_CO_prefix = 'a09_co' ! 'gs98_co' !!change this 
+
+/ ! end of kap namelist
+
+
+&controls
+
+   !# when to stop
+   
+      !stop_at_phase_ZACHeB = .true. ! terminate before He burn
+      xa_central_lower_limit_species(1) = 'he4'
+      xa_central_lower_limit(1) = 0.001
+
+
+   !# specifications for starting model
+
+	initial_mass = 2  !set by driver.py
+	initial_z = 0.0142477  !set by driver.py
+	initial_y = 0.267949  !set by driver.py
+
+   !# mixing parameters
+
+	mixing_length_alpha = 2  !set by driver.py
+      use_Ledoux_criterion = .false.
+      MLT_option = 'Henyey'
+
+   !## overshooting
+
+	!overshoot_scheme(1) = '' !set by driver.py 
+	!overshoot_zone_type(1) = '' !set by driver.py 
+	!overshoot_zone_loc(1) = '' !set by driver.py 
+	!overshoot_bdy_loc(1) = '' !set by driver.py 
+	!overshoot_f(1) = 0  !set by driver.py
+	!overshoot_f0(1) = 0 !set by driver.py
+
+
+	!overshoot_scheme(2) = '' !set by driver.py 
+	!overshoot_zone_type(2) = '' !set by driver.py 
+	!overshoot_zone_loc(2) = '' !set by driver.py 
+	!overshoot_bdy_loc(2) = '' !set by driver.py 
+	!overshoot_f(2) = 0  !set by driver.py
+	!overshoot_f0(2) = 0 !set by driver.py
+
+   !# controls for output
+
+	star_history_name = 'index000014.history'  !set by driver.py
+
+      terminal_interval = 100
+      write_header_frequency = 1
+      photo_interval = -1
+      history_interval = 1
+      write_profiles_flag = .false.
+      write_pulse_data_with_profile = .true.
+      pulse_data_format = 'FGONG'
+      add_atmosphere_to_pulse_data = .true.
+	profile_data_prefix = 'index000014profile' !set by driver.py 
+	profiles_index_name = 'index000014profile.index' !set by driver.py 
+      profile_interval = 5
+      max_num_profile_models = 18000
+
+   !# when to stop
+
+      max_model_number = 20000
+      !max_age = 2.2d10
+      dt_years_for_steps_before_max_age = 1d6
+
+
+   !# mass gain or loss
+   
+
+   !# nuclear reaction controls
+
+      !default_net_name = 'basic_plus_fe56.net' !'mesa_49.net'
+
+    !# element diffusion
+
+      show_diffusion_info = .false.
+      do_element_diffusion = .false. !change this
+      !diffusion_dt_limit = 3.15d7
+
+   !# timestep controls
+
+      !min_timestep_limit = 1d-10 !1d-6
+      max_timestep = 3.15d15  ! in seconds.  max_timestep <= 0 means no upper limit.
+      !timestep_factor_for_retries = 0.5d0 ! Before retry, decrease dt by this.
+      !delta_lgTeff_hard_limit = 0.0005
+      !delta_lgL_limit_L_min = 0.0
+      !delta_lgL_hard_limit = 0.004
+      !dX_limit = 0.001  ! If max dX is greater than this, reduce the next timestep by dX_limit/max_dX.
+      !dX_decreases_only = .true. !If true, then only consider decreases in abundance. dX_decreases_only applies to dX_div_X also.
+      !varcontrol_target = 1d-3
+      !delta_lgL_He_limit = 0.01d0
+
+   !# asteroseismology controls
+
+      get_delta_nu_from_scaled_solar = .false.
+      nu_max_sun = 3090d0
+      delta_nu_sun = 135.1d0
+      Teff_sun = 5777d0
+
+      !# Brunt controls
+
+         calculate_Brunt_N2 = .true. 
+         num_cells_for_smooth_brunt_B = 0
+   
+   !# atm
+
+      atm_option = 'T_tau'
+      atm_T_tau_relation =  'Eddington'
+      atm_T_tau_opacity = 'fixed' !'iterated'
+
+   !# miscellaneous controls
+   
+      warn_when_large_rel_run_E_err = 99d0 !0.02d0
+
+      use_gold_tolerances = .true.
+
+      convergence_ignore_equL_residuals = .true. ! needed during flash
+      ! note: can get rid of this if turn on conv_vel's.  just takes more steps.
+      use_dedt_form_of_energy_eqn = .true.
+
+      varcontrol_target = 1d-3 !1d-3 in 1M_to_wd test suite !1d-4
+
+      
+/ ! end of controls namelist
+
+
+
+
+&pgstar
+   
+/ ! end of pgstar namelist
+
